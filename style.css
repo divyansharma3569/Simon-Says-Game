@@ -1,129 +1,195 @@
 @import url('https://fonts.googleapis.com/css2?family=Lora&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nanum+Gothic&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Poppins:wght@400;700&family=Roboto&display=swap');
 
-:root {
-    --blue: #053464;
-    --middle-blue: #52799a;
-    --light-blue: #abc5cd;
-    --white: #f0f7f9;
-    --yellow: #f6bf15;
+:root{
+    /* slightly lighter, premium background (lightened a touch) */
+    --bg-start: #15253a;   /* ~a touch lighter than before */
+    --bg-end:   #223b53;   /* slightly lifted, still deep slate */
+    --surface:  rgba(255,255,255,0.03); /* tiny lift to surface */
+    --text:     #e6f3fb;
+    --muted:    #9fb0bf;
+
+    /* richer accents */
+    --accent-1: #4a90ff;
+    --accent-2: #ff6a45;
+    --accent-3: #7b57ff;
+    --accent-4: #ffb24a;
+
+    /* borders / shadows — softened for premium look */
+    --card-border: rgba(255,255,255,0.06);
+    --card-shadow: 0 20px 46px rgba(3,8,18,0.52);
+    --inset-shadow: inset 0 -8px 24px rgba(0,0,0,0.35);
 }
 
+/* subtle page sheen + preserve original gradient, very light overall lift */
 body {
     text-align: center;
     font-family: "Poppins", sans-serif;
-    background-color: var(--blue);
-    color: var(--white);
+    background:
+      radial-gradient(1200px 600px at 10% 10%, rgba(255,255,255,0.012), transparent 10%),
+      linear-gradient(160deg, var(--bg-start) 0%, var(--bg-end) 100%);
+    color: var(--text);
     overflow: hidden;
+    padding: 36px 18px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* allow both background-image and background-color transitions (JS uses backgroundColor) */
+    transition: background 320ms ease, background-color 260ms ease;
 }
 
-h3 {
-    font-weight: 900;
+/* If JS sets inline background-color to "red" we detect that (style attribute) and force a full red background.
+   This is a small compatibility "hack" so your provided JS (which uses document.body.style.backgroundColor = "red")
+   will produce a full-cover red flash (we remove the gradient for the brief moment). */
+body[style*="background-color: red"] {
+    background-image: none !important;
+    background: #8b0000 !important;
+    transition: background 140ms ease !important;
 }
 
-.high-score {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 20px;
+/* keep a class-based game-over fallback if you prefer toggling a class in JS */
+body.game-over {
+    background-image: none !important;
+    background: #8b0000 !important; /* dark red flash */
+    transition: background 140ms ease;
 }
 
+/* headings */
+h3 { font-weight: 800; color: var(--text); margin-bottom: 6px; letter-spacing: 0.2px; }
+.high-score { font-size: 18px; font-weight: 600; margin-bottom: 20px; color: var(--muted); }
+
+/* start button */
 .start-btn {
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    font-weight: bold;
-    padding: 2.5px;
-    font-size: 20px;
-    height: 35px;
-    width: 85px;
+    font-weight: 700;
+    padding: 8px 14px;
+    font-size: 16px;
+    height: 40px;
+    min-width: 96px;
     border-radius: 10px;
-    border: 1px solid var(--white);
-    margin-bottom: 40px;
-    color: var(--blue);
-    background-color: var(--white);
+    border: 1px solid rgba(255,255,255,0.06);
+    margin-bottom: 34px;
+    color: var(--text);
+    background: rgba(255,255,255,0.03);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+    cursor: pointer;
+    transition: transform .08s ease, box-shadow .08s ease;
 }
+.start-btn:active { transform: translateY(1px); }
+.start-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(0,0,0,0.6); }
 
+/* grid */
 .btn-container {
     display: grid;
     grid-template-columns: repeat(2, 220px);
-    /* 2 cols */
-    gap: 30px;
-    /* equal gap between rows + columns */
+    gap: 34px;
     justify-content: center;
     align-items: center;
 }
 
-
+/* button style */
 .btn {
-    box-sizing: border-box;
     height: 220px;
     width: 220px;
-    border: 2px solid var(--white);
-    border-radius: 35px;
+    border-radius: 18px;
     margin: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text);
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    border: 1.5px solid var(--card-border);
+    /* use slightly more refined shadow and subtle backdrop blur for a glassy premium feel */
+    box-shadow: var(--card-shadow);
+    background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(0,0,0,0.03) 100%);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    /* slightly snappier, but subtle transitions */
+    transition: transform .12s cubic-bezier(.2,.9,.2,1), box-shadow .12s ease;
+}
+.btn::before{
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 18px;
+    pointer-events: none;
+    box-shadow: var(--inset-shadow);
+    -webkit-mask: linear-gradient(#fff, #fff);
+    mask: linear-gradient(#fff, #fff);
 }
 
+/* ----------------- REDUCED / SUBTLE HOVER ----------------- */
+/* very small, premium hover — almost unnoticeable */
+.btn:hover {
+    transform: translateY(-1px) scale(1.001);
+    box-shadow: 0 18px 36px rgba(3,8,18,0.44);
+}
+
+/* micro-press on active */
+.btn:active {
+    transform: translateY(0) scale(0.999);
+    box-shadow: 0 10px 20px rgba(3,8,18,0.40);
+}
+
+/* premium button colors */
 .red {
-    background-color: rgb(245, 63, 99);
+    background: linear-gradient(180deg, #ff9a7f 0%, #ff6a45 100%);
+    color: rgba(16,10,8,0.98);
 }
-
 .blue {
-    background-color: rgb(98, 145, 233);
+    background: linear-gradient(180deg, #74a9ff 0%, #4a90ff 100%);
+    color: rgba(6,16,32,0.95);
 }
-
 .purple {
-    background-color: rgb(155, 89, 222);
+    background: linear-gradient(180deg, #a48bff 0%, #7b57ff 100%);
+    color: rgba(12,8,28,0.96);
 }
-
 .yellow {
-    background-color: rgb(245, 245, 86);
+    background: linear-gradient(180deg, #ffd59a 0%, #ffb24a 100%);
+    color: rgba(28,18,0,0.95);
 }
 
-.flash {
-    background-color: var(--white);
-}
-
+/* ---------- CHANGED: user flash (click) now green and premium ---------- */
+/* This is the key change: when you apply .userflash on click, it will use a green premium palette */
 .userflash {
-    background-color: green;
+    background: linear-gradient(180deg, #eef9f0 0%, #9fe2ae 100%); /* soft -> mid green */
+    color: #042a10; /* dark green text for contrast */
+    box-shadow: 0 24px 50px rgba(34,153,84,0.12); /* soft green glow */
+    border: 1.5px solid rgba(34,153,84,0.12);
+    /* small sheen to feel premium */
+    background-image: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 18%), linear-gradient(180deg, #eef9f0 0%, #9fe2ae 100%);
 }
 
-.hidden {
-    display: none;
+/* flash (keeps white flash as-is) */
+.flash {
+    background: linear-gradient(180deg, #ffffff 0%, #f2f6fb 100%);
+    color: #0b1220;
+    box-shadow: 0 28px 60px rgba(255,255,255,0.06);
+    border: 1.5px solid rgba(255,255,255,0.12);
 }
 
-.visible {
-    display: inline-block;
+/* Visual dim/disable used while flashing to prevent interactions */
+.disabled-dim {
+    opacity: .86;
+    pointer-events: none;
+    filter: grayscale(.06) contrast(.98);
 }
 
+/* helpers */
+.hidden { display: none; }
+.visible { display: inline-block; }
+
+/* responsive */
 @media (max-width: 610px) {
-    .btn-container {
-        grid-template-columns: repeat(2, 150px);
-        gap: 20px;
-    }
-
-    .line-one,
-    .line-two {
-        gap: 20px;
-    }
-
-    .btn {
-        height: 150px;
-        width: 150px;
-        border-radius: 25px;
-    }
+    .btn-container { grid-template-columns: repeat(2, 150px); gap: 20px; }
+    .btn { height: 150px; width: 150px; border-radius: 14px; font-size: 16px; }
+    .btn::before { border-radius: 14px; }
 }
 
 @media (max-width: 360px) {
-    .btn-container {
-        grid-template-columns: repeat(2, 110px);
-        gap: 15px;
-    }
-
-    .line-one,
-    .line-two {
-        gap: 15px;
-    }
-
-    .btn {
-        height: 110px;
-        width: 110px;
-        border-radius: 20px;
-    }
+    .btn-container { grid-template-columns: repeat(2, 110px); gap: 14px; }
+    .btn { height: 110px; width: 110px; border-radius: 10px; font-size: 14px; }
+    .btn::before { border-radius: 10px; }
 }

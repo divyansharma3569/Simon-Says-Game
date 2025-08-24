@@ -2,13 +2,13 @@
 
 :root {
     --blue: #053464;
-    --middle-blue : #52799a;
-    --light-blue : #abc5cd; 
+    --middle-blue: #52799a;
+    --light-blue: #abc5cd;
     --white: #f0f7f9;
     --yellow: #f6bf15;
 }
 
-body{
+body {
     text-align: center;
     font-family: "Poppins", sans-serif;
     background-color: var(--blue);
@@ -16,7 +16,7 @@ body{
     overflow: hidden;
 }
 
-h3{
+h3 {
     font-weight: 900;
 }
 
@@ -26,8 +26,8 @@ h3{
     margin-bottom: 20px;
 }
 
-.start-btn{
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+.start-btn {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     font-weight: bold;
     padding: 2.5px;
     font-size: 20px;
@@ -40,72 +40,98 @@ h3{
     background-color: var(--white);
 }
 
-.btn-container{
-    display: flex;
+.btn-container {
+    /* display: flex; */
+    /* align-items: center;
+    flex-direction: column; */
+    display: grid;
+    grid-template-columns: repeat(2, 220px);
+    /* 2 columns, each 220px wide */
+    gap: 30px;
+    /* equal spacing between rows and columns */
     justify-content: center;
     align-items: center;
-    flex-direction: column;
 }
 
-.line-one, .line-two {
+.line-one,
+.line-two {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    /* center buttons in the column */
+    gap: 30px;
+    margin: 0;  
 }
 
-.btn{
+.btn {
+    box-sizing: border-box;
     height: 220px;
     width: 220px;
     border: 2px solid var(--white);
     border-radius: 35px;
-    margin: 30px 15px;
+    margin: 0;  
 }
 
-.red{
+.red {
     background-color: rgb(245, 63, 99);
 }
 
-.blue{
+.blue {
     background-color: rgb(98, 145, 233);
 }
 
-.purple{
-    background-color:rgb(155, 89, 222);
+.purple {
+    background-color: rgb(155, 89, 222);
 }
 
-.yellow{
+.yellow {
     background-color: rgb(245, 245, 86);
 }
 
-.flash{
+.flash {
     background-color: var(--white);
 }
 
-.userflash{
+.userflash {
     background-color: green;
 }
 
-.hidden{
+.hidden {
     display: none;
 }
 
-.visible{
+.visible {
     display: inline-block;
 }
 
-@media (max-width: 610px){
-    .btn{
+@media (max-width: 610px) {
+    .btn-container {
+        grid-template-columns: repeat(2, 150px);
+        gap: 20px;
+    }
+    .line-one,
+    .line-two {
+        gap: 20px;         /* same reduced gap */
+    }
+    .btn {
         height: 150px;
         width: 150px;
         border-radius: 25px;
     }
 }
 
-@media (max-width: 360px){
-    .btn{
-        margin-top: 100px;
+@media (max-width: 360px) {
+    .btn-container {
+        grid-template-columns: repeat(2, 110px);
+        gap: 15px;
+    }
+    .line-one,
+    .line-two {
+        gap: 15px;         /* same small gap */
+    }
+    .btn {
         height: 110px;
         width: 110px;
         border-radius: 20px;
-        margin: 15px 7.5px;
     }
 }

@@ -9,7 +9,6 @@ let level = 0;
 let h3 = document.querySelector("h3");
 let startBtn = document.querySelector(".start-btn");
 
-// High Score Setup
 let highScore = localStorage.getItem("highScore") || 0;
 document.querySelector(".high-score").innerText = `High Score: ${highScore}`;
 
@@ -40,7 +39,6 @@ startBtn.addEventListener("click", function(){
     }
 });
 
-// Hide Start Button on larger screens
 function hiddenStartBtn(){
     if(startBtn.classList.contains('visible')){
         startBtn.classList.remove('visible');   
@@ -52,7 +50,6 @@ function displayStartBtn(){
     startBtn.classList.add('visible');
 }
 
-// Game Functions
 function gameFlash(btn){
     btn.classList.add("flash");
     setTimeout(() => {
@@ -123,7 +120,6 @@ for (let btn of allBtns){
 }
 
 function reset(){
-    // Update high score
     if(level > highScore){
         highScore = level;
         localStorage.setItem("highScore", highScore);
